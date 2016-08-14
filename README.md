@@ -6,9 +6,9 @@ FastStack is dynamically resizable data structure optimized for fast iteration o
 Tools
 =====
 
-**bench_int** - Benchmark with int elements (low memory fragmentation case).
+**bench_int** - Benchmark with int elements (low memory fragmentation case)
 
-**bench_ptr** - Benchmark with ptr elements (high memory fragmentation case).
+**bench_ptr** - Benchmark with ptr elements (high memory fragmentation case)
 
 (using [nimbench](https://github.com/ivankoster/nimbench))
 
