@@ -4,6 +4,7 @@ version       = "1.0.0"
 author        = "Vladar4"
 description   = "Dynamically resizable data structure optimized for fast iteration."
 license       = "MIT"
+InstallFiles  = "faststack.nim", "LICENSE"
 
 # Dependencies
 
