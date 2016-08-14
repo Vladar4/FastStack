@@ -10,7 +10,9 @@ Tools
 
 **bench_ptr** - Benchmark with ptr elements (high memory fragmentation case).
 
-**test** - Unit testing suite.
+(using [nimbench](https://github.com/ivankoster/nimbench))
+
+**test** - Unit testing suite (using [unittest](http://nim-lang.org/docs/unittest.html))
 
 Benchmark (int)
 ===============
@@ -35,9 +37,9 @@ List                                                       545.62us    1.83K
 FastStack                                                  115.65us    8.65K
 ```
 
-Seq: 100.00%
-List: 19.87%
-FastStack: 93.92%
+* Seq: 100.00%
+* List: 19.87%
+* FastStack: 93.92%
 
 ![chart_bench_int](chart_bench_int.png "bench_int chart")
 
@@ -64,9 +66,9 @@ List                                                         2.21ms   452.28
 FastStack                                                    1.38ms   724.24
 ```
 
-Seq: 100.00%
-List: 74.44%
-FastStack: 119.21%
+* Seq: 100.00%
+* List: 74.44%
+* FastStack: 119.21%
 
 ![chart_bench_ptr](chart_bench_ptr.png "bench_ptr_chart")
 
