@@ -39,12 +39,19 @@ proc newFillA(): FastStack[int] =
     result.add(idx)
 
 
+proc newOne(): FastStack[int] =
+  # [1]
+  result = newFastStack[int](1)
+  result.add(1)
+
+
 var
   sEmpty = newEmpty()
   sFillL = newFillL()
   sFillR = newFillR()
   sFillC = newFillC()
   sFillA = newFillA()
+  sOne = newOne()
 
 import terminal
 
@@ -58,6 +65,7 @@ test "Stringify test":
   require $sFillR == "[3, 4, 5]"
   require $sFillC == "[2, 3, 4]"
   require $sFillA == "[1, 2, 3, 4, 5]"
+  require $sOne == "[1]"
 
 
 test "Test indexIsValid proc":
@@ -67,12 +75,14 @@ test "Test indexIsValid proc":
     validFillR = [false, false, true, true, true]
     validFillC = [false, true, true, true, false]
     validFillA = [true, true, true, true, true]
+    validOne = [true, false, false, false, false]
   for idx in 0..4:
     check sEmpty.indexIsValid(idx) == validEmpty[idx]
     check sFillL.indexIsValid(idx) == validFillL[idx]
     check sFillR.indexIsValid(idx) == validFillR[idx]
     check sFillC.indexIsValid(idx) == validFillC[idx]
     check sFillA.indexIsValid(idx) == validFillA[idx]
+    check sOne.indexIsValid(idx) == validOne[idx]
 
 
 test "Test len proc":
@@ -81,6 +91,7 @@ test "Test len proc":
   check sFillR.len == 3
   check sFillC.len == 3
   check sFillA.len == 5
+  check sOne.len == 1
 
 
 test "Test items iterator":
@@ -89,6 +100,7 @@ test "Test items iterator":
     iFillR = [3, 4, 5]
     iFillC = [2, 3, 4]
     iFillA = [1, 2, 3, 4, 5]
+    iOne = [1]
 
   var count = 0
   for i in sEmpty.items:
@@ -105,6 +117,7 @@ test "Test items iterator":
   cycle sFillR, iFillR
   cycle sFillC, iFillC
   cycle sFillA, iFillA
+  cycle sOne, iOne
 
 test "Test pairs iterator":
   let
@@ -112,6 +125,7 @@ test "Test pairs iterator":
     iFillR = [(2, 3), (3, 4), (4, 5)]
     iFillC = [(1, 2), (2, 3), (3, 4)]
     iFillA = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5)]
+    iOne = [(0, 1)]
 
   template cycle(o: FastStack, i: openarray[(int, int)]) =
     var idx = 0
@@ -123,6 +137,7 @@ test "Test pairs iterator":
   cycle sFillR, iFillR
   cycle sFillC, iFillC
   cycle sFillA, iFillA
+  cycle sOne, iOne
 
 
 test "Test add proc":
@@ -132,6 +147,7 @@ test "Test add proc":
     addFillR = "[3, 4, 5, 11, 12, 13, 14, 15]"
     addFillC = "[2, 3, 4, 11, 12, 13, 14, 15]"
     addFillA = "[1, 2, 3, 4, 5, 11, 12, 13, 14, 15]"
+    addOne = "[1, 11, 12, 13, 14, 15]"
 
   for idx in 11..15:
     sEmpty.add(idx)
@@ -139,12 +155,14 @@ test "Test add proc":
     sFillR.add(idx)
     sFillC.add(idx)
     sFillA.add(idx)
+    sOne.add(idx)
 
   check $sEmpty == addEmpty
   check $sFillL == addFillL
   check $sFillR == addFillR
   check $sFillC == addFillC
   check $sFillA == addFillA
+  check $sOne == addOne
 
 
 test "Test pull proc":
@@ -159,6 +177,8 @@ test "Test pull proc":
     afterFillC = "[4, 11, 12, 13, 14, 15]"
     pulledFillA = [1, 2]
     afterFillA = "[3, 4, 5, 11, 12, 13, 14, 15]"
+    pulledOne = [1, 11]
+    afterOne = "[12, 13, 14, 15]"
 
   check pulledEmpty[0] == sEmpty.pull()
   check pulledEmpty[1] == sEmpty.pull()
@@ -175,6 +195,9 @@ test "Test pull proc":
   check pulledFillA[0] == sFillA.pull()
   check pulledFillA[1] == sFillA.pull()
   check $sFillA == afterFillA
+  check pulledOne[0] == sOne.pull()
+  check pulledOne[1] == sOne.pull()
+  check $sOne == afterOne
 
 test "Test push proc":
   let
@@ -183,6 +206,7 @@ test "Test push proc":
     pushFillR = "[21, 22, 23, 24, 25, 5, 11, 12, 13, 14, 15]"
     pushFillC = "[21, 22, 23, 24, 25, 4, 11, 12, 13, 14, 15]"
     pushFillA = "[21, 22, 23, 24, 25, 3, 4, 5, 11, 12, 13, 14, 15]"
+    pushOne = "[21, 22, 23, 24, 25, 12, 13, 14, 15]"
 
   for idx in countdown(25, 21):
     sEmpty.push(idx)
@@ -190,12 +214,14 @@ test "Test push proc":
     sFillR.push(idx)
     sFillC.push(idx)
     sFillA.push(idx)
+    sOne.push(idx)
 
   check $sEmpty == pushEmpty
   check $sFillL == pushFillL
   check $sFillR == pushFillR
   check $sFillC == pushFillC
   check $sFillA == pushFillA
+  check $sOne == pushOne
 
 
 test "Test pop proc":
@@ -206,6 +232,7 @@ test "Test pop proc":
     afterFillR = "[21, 22, 23, 24, 25, 5, 11, 12, 13]"
     afterFillC = "[21, 22, 23, 24, 25, 4, 11, 12, 13]"
     afterFillA = "[21, 22, 23, 24, 25, 3, 4, 5, 11, 12, 13]"
+    afterOne = "[21, 22, 23, 24, 25, 12, 13]"
 
   check popped[0] == sEmpty.pop()
   check popped[1] == sEmpty.pop()
@@ -222,6 +249,9 @@ test "Test pop proc":
   check popped[0] == sFillA.pop()
   check popped[1] == sFillA.pop()
   check $sFillA == afterFillA
+  check popped[0] == sOne.pop()
+  check popped[1] == sOne.pop()
+  check $sOne == afterOne
 
 
 test "Test find and [] proc":
@@ -231,6 +261,7 @@ test "Test find and [] proc":
     iFillR = [21, 22, 23, 24, 25, 5, 11, 12, 13]
     iFillC = [21, 22, 23, 24, 25, 4, 11, 12, 13]
     iFillA = [21, 22, 23, 24, 25, 3, 4, 5, 11, 12, 13]
+    iOne = [21, 22, 23, 24, 25, 12, 13]
 
   for idx in 0..high(iEmpty):
     check sEmpty[sEmpty.find(iEmpty[idx])] == iEmpty[idx]
@@ -242,6 +273,8 @@ test "Test find and [] proc":
     check sFillC[sFillC.find(iFillC[idx])] == iFillC[idx]
   for idx in 0..high(iFillA):
     check sFillA[sFillA.find(iFillA[idx])] == iFillA[idx]
+  for idx in 0..high(iOne):
+    check sOne[sOne.find(iOne[idx])] == iOne[idx]
 
 
 test "Test contains proc":
@@ -254,7 +287,9 @@ test "Test contains proc":
   check sFillC.contains(4)
   check(not sFillC.contains(15))
   check sFillA.contains(11)
-  check(not sFillA.contains(15))
+  check(not sFillA.contains(14))
+  check sOne.contains(12)
+  check(not sOne.contains(15))
 
 
 test "Test inject proc":
@@ -264,6 +299,7 @@ test "Test inject proc":
     afterFillR = "[21, 22, 23, 24, 31, 32, 25, 5, 11, 12, 13]"
     afterFillC = "[21, 22, 23, 24, 31, 32, 25, 4, 11, 12, 13]"
     afterFillA = "[21, 22, 23, 24, 31, 32, 25, 3, 4, 5, 11, 12, 13]"
+    afterOne = "[21, 22, 23, 24, 31, 32, 25, 12, 13]"
 
   for idx in 31..32:
     sEmpty.inject(idx, sEmpty.find(25))
@@ -271,12 +307,14 @@ test "Test inject proc":
     sFillR.inject(idx, sFillR.find(25))
     sFillC.inject(idx, sFillC.find(25))
     sFillA.inject(idx, sFillA.find(25))
+    sOne.inject(idx, sOne.find(25))
 
   check $sEmpty == afterEmpty
   check $sFillL == afterFillL
   check $sFillR == afterFillR
   check $sFillC == afterFillC
   check $sFillA == afterFillA
+  check $sOne == afterOne
 
   var sBorderline = newFastStack[int](5)
   for idx in 1..5:
@@ -299,6 +337,8 @@ test "Test eject proc":
     afterFillC = "[22, 24, 31, 25, 4, 12]"
     ejectedFillA = [21, 23, 32, 5, 13]
     afterFillA = "[22, 24, 31, 25, 3, 4, 11, 12]"
+    ejectedOne = [21, 23, 32, 25, 13]
+    afterOne = "[22, 24, 31, 12]"
 
   for idx in 0..4:
     check ejectedEmpty[idx] == sEmpty.eject(sEmpty.find(ejectedEmpty[idx]))
@@ -306,12 +346,14 @@ test "Test eject proc":
     check ejectedFillR[idx] == sFillR.eject(sFillR.find(ejectedFillR[idx]))
     check ejectedFillC[idx] == sFillC.eject(sFillC.find(ejectedFillC[idx]))
     check ejectedFillA[idx] == sFillA.eject(sFillA.find(ejectedFillA[idx]))
+    check ejectedOne[idx] == sOne.eject(sOne.find(ejectedOne[idx]))
 
   check $sEmpty == afterEmpty
   check $sFillL == afterFillL
   check $sFillR == afterFillR
   check $sFillC == afterFillC
   check $sFillA == afterFillA
+  check $sOne == afterOne
 
   var sBorderline = newFastStack[int](5)
   for idx in 1..5:
@@ -336,11 +378,12 @@ test "Test firstVal, lastVal, and []= proc":
     idx = o.find(o.lastVal)
     o[idx] = o[idx] + o[idx]
 
-  modify(sEmpty)
-  modify(sFillL)
-  modify(sFillR)
-  modify(sFillC)
-  modify(sFillA)
+  modify sEmpty
+  modify sFillL
+  modify sFillR
+  modify sFillC
+  modify sFillA
+  modify sOne
 
   template validate(o: FastStack) =
     check o.firstVal == after[0]
@@ -352,6 +395,7 @@ test "Test firstVal, lastVal, and []= proc":
   validate sFillR
   validate sFillC
   validate sFillA
+  validate sOne
 
 
 test "Test firstKey, lastKey":
@@ -361,12 +405,14 @@ test "Test firstKey, lastKey":
   check sFillL.find(sFillL.firstVal) == sFillL.firstKey
   check sFillC.find(sFillC.firstVal) == sFillC.firstKey
   check sFillA.find(sFillA.firstVal) == sFillA.firstKey
+  check sOne.find(sOne.firstVal) == sOne.firstKey
 
   check sEmpty.find(sEmpty.lastVal) == sEmpty.lastKey
   check sFillR.find(sFillR.lastVal) == sFillR.lastKey
   check sFillL.find(sFillL.lastVal) == sFillL.lastKey
   check sFillC.find(sFillC.lastVal) == sFillC.lastKey
   check sFillA.find(sFillA.lastVal) == sFillA.lastKey
+  check sOne.find(sOne.lastVal) == sOne.lastKey
 
 
 test "Allocation test":
